@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Test Reaction Game</title>
+</head>
+<style>
+body {
+    font-family: Verdana, Geneva, sans-serif;
+    background-color: #e6e6e6;
+}
+
+#box {
+    width: 200px;
+    height: 200px;
+    background-color: red;
+    display: none;
+    position: relative;
+}
+</style>
+
+<body>
+    <h1>Test Your Reaction</h1>
+    <p>
+        Your Reaction Time is
+        <span id="time">
+		0
+	</span> s
+    </p>
+    <canvas id="box"></canvas>
+    <script>
+    var createTime;
+    var clickTime;
+    var reactionTime;
+
+    function getRandomColor() {
+        var letters = "0123456789ABCDEF".split("");
+        var color = "#";
+
+        for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+
+        return color;
+    }
+
+    function drawSmilingFace() {
+        var canvas = document.getElementById("box");
+        var centerX = canvas.width / 2;
+        var centerY = canvas.height / 2;
+        var context = canvas.getContext('2d');
+        var eyeRadius = 10;
+        var eyeXOffset = 25;
+        var eyeYOffset = 20;
+
+        // draw the eyes
+        context.beginPath();
+        var eyeX = centerX - eyeXOffset;
+        var eyeY = centerY - eyeXOffset;
+        context.arc(eyeX, eyeY, eyeRadius, 0, 2 * Math.PI, false);
+        var eyeX = centerX + eyeXOffset;
+        context.arc(eyeX, eyeY, eyeRadius, 0, 2 * Math.PI, false);
+        context.fillStyle = 'black';
+        context.fill();
+
+        // draw the mouth
+        context.beginPath();
+        context.arc(centerX, centerY, 50, 0, Math.PI, false);
+        context.stroke();
+
+    }
+
+    function makeBox() {
+        var time = Math.random();
+        time *= 1000;
+
+        setTimeout(function() {
+            var randomShape = Math.random();
+
+            if (randomShape > 0.5) {
+                document.getElementById("box").style.borderRadius = "100px";
+                drawSmilingFace();
+            } else {
+                document.getElementById("box").style.borderRadius = "0";
+                drawSmilingFace();
+            }
+
+            var top = Math.random() * 500;
+            var left = Math.random() * 800;
+            var randomColor = getRandomColor();
+
+            document.getElementById("box").style.top = top + "px";
+            document.getElementById("box").style.left = left + "px";
+            document.getElementById("box").style.backgroundColor = randomColor;
+            document.getElementById("box").style.boxShadow = "0 0 20px " + randomColor;
+            document.getElementById("box").style.display = "block";
+            createTime = Date.now();
+        }, time)
+
+    }
+
+    document.getElementById("box").onclick = function() {
+        this.style.display = "none";
+        clickTime = Date.now();
+        reactionTime = (clickTime - createTime) / 1000;
+        document.getElementById("time").innerHTML = reactionTime;
+        makeBox();
+    }
+
+    makeBox();
+    </script>
+</body>
+
+</html>
